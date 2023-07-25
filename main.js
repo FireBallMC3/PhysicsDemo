@@ -9,7 +9,7 @@ setInterval(update, 1000 / FPS);
 
 var fps = 0;
 var debugText = new TextBlock(10, 20, 20);
-var ball = new Ball(100, 10, 0, 0, 20, new PhysicsMaterial());
+var ball = new Ball(100, 30, 0, 0, 20, new PhysicsMaterial());
 var mouseX = 0;
 var mouseY = 0;
 
@@ -82,11 +82,11 @@ function mouseWheel(e) {
 function debugTextMouseWheel(e, i) {
 
     var modifier = 1;
-    if (e.ctrlKey) {
-        modifier = 0.1;
-    }
+    // if (e.ctrlKey) {
+    //     modifier = 0.1;
+    // }
     if (e.shiftKey) {
-        modifier = 10;
+        modifier = 0.1;
     }
     if (e.altKey) {
         modifier = 0.01;
@@ -106,8 +106,3 @@ function debugTextMouseWheel(e, i) {
 
 document.addEventListener("mousemove", mouseMove);
 document.addEventListener("mousewheel", mouseWheel);
-$(window).bind('mousewheel DOMMouseScroll', function (event) {
-    if (event.ctrlKey == true) {
-    event.preventDefault();
-    }
-});

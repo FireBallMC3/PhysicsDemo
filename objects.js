@@ -29,6 +29,10 @@ class Ball{
             this.y = canvas.height - this.radius;
             this.yVel *= -this.physMat.restitution;
         }
+        if (this.y - this.radius < 0){
+            this.y = this.radius;
+            this.yVel *= -this.physMat.restitution;
+        }
         if (this.x + this.radius > canvas.width){
             this.x = canvas.width - this.radius;
             this.xVel *= -this.physMat.restitution;
