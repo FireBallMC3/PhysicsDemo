@@ -12,12 +12,18 @@ class Ball{
         this.physMat = physMat;
     }
     draw(){
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, 2*Math.PI);
-        ctx.fillStyle = this.color;
-        ctx.fill();
+        drawCircle(this.x, this.y, this.radius, this.color);
     }
-    step(deltaTime){
+    step(deltaTime, planets = null){
+        if (planets != null){
+            for (let i = 0; i < planets.length; i++){
+                let xDist = planets[i].x - this.x;
+                let yDist = planets[i].y - this.y;
+                this.xVel = this.xVel + xDist * planets[i].gravity * this.radius / 1000 / Math.pow(Math.sqrt(xDist * xDist + yDist * yDist), 2) * 100;
+                this.yVel = this.yVel + yDist * planets[i].gravity * this.radius / 1000 / Math.pow(Math.sqrt(xDist * xDist + yDist * yDist), 2) * 100;
+            }
+        }
+
         if (this.gravity && !this.colliding){
             this.yVel += this.physMat.gravity * this.radius / 10;
         }
@@ -43,6 +49,45 @@ class Ball{
         }
         this.x += this.xVel * deltaTime / 1000;
         this.y += this.yVel * deltaTime / 1000;
+    }
+}
+
+class Planet{
+    constructor(x, y, radius, color = "blue", gravity = 100){
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.color = color;
+        this.gravity = gravity;
+    }
+    draw(){
+        drawCircle(this.x, this.y, this.radius, this.color);
+    }
+}
+
+class VectorDisplay{
+    constructor(x, y, xDir, yDir, color = "red"){
+        this.x = x;
+        this.y = y;
+        this.xDir = xDir;
+        this.yDir = yDir;
+        // this.width = width;
+        this.color = color;
+    }
+    draw(){
+        // console.log(this.x, this.y, this.xDir, this.yDir, this.color);
+        // ctx.strokeStyle = this.color;
+        // ctx.beginPath();
+        // ctx.moveTo(this.x, this.y);
+        // ctx.lineTo(this.x + this.xDir * this.width, this.y + this.yDir * this.width);
+        // ctx.stroke();
+        // ctx.closePath();
+        ctx.strokeStyle = this.color;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        canvas_arrow(ctx, this.x, this.y, this.x + this.xDir, this.y + this.yDir);
+        ctx.stroke();
+        ctx.closePath();
     }
 }
 
@@ -115,4 +160,24 @@ const funcType = {
     "keyDown": "keyDown",
     "keyUp": "keyUp",
     "keyPress": "keyPress"
+}
+
+function canvas_arrow(context, fromx, fromy, tox, toy) {
+    var headlen = 10; // length of head in pixels
+    var dx = tox - fromx;
+    var dy = toy - fromy;
+    var angle = Math.atan2(dy, dx);
+    context.moveTo(fromx, fromy);
+    context.lineTo(tox, toy);
+    context.lineTo(tox - headlen * Math.cos(angle - Math.PI / 6), toy - headlen * Math.sin(angle - Math.PI / 6));
+    context.moveTo(tox, toy);
+    context.lineTo(tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6));
+  }
+
+function drawCircle(x, y, radius, color = "red"){
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, 2*Math.PI);
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.closePath();
 }
